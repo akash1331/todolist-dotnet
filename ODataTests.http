@@ -1,0 +1,71 @@
+### OData Endpoints - Sample Requests
+
+@baseUrl = https://localhost:7213
+@odataUrl = {{baseUrl}}/odata/Todos
+
+### Get all todos (OData)
+GET {{odataUrl}}
+
+### Get all todos with count
+GET {{odataUrl}}?$count=true
+
+### Get a specific todo by ID
+GET {{odataUrl}}(1)
+
+### Filter: Get only completed todos
+GET {{odataUrl}}?$filter=IsCompleted eq true
+
+### Filter: Get incomplete todos
+GET {{odataUrl}}?$filter=IsCompleted eq false
+
+### Filter: Title contains specific text
+GET {{odataUrl}}?$filter=contains(Title, 'application')
+
+### Sort: Order by CreatedDate descending
+GET {{odataUrl}}?$orderby=CreatedDate desc
+
+### Select: Get only specific fields
+GET {{odataUrl}}?$select=Id,Title,IsCompleted
+
+### Pagination: Skip 2, take 3
+GET {{odataUrl}}?$skip=2&$top=3
+
+### Complex query: Filter incomplete, sort by date, select fields
+GET {{odataUrl}}?$filter=IsCompleted eq false&$orderby=CreatedDate desc&$select=Id,Title,CreatedDate
+
+### Create a new todo (OData)
+POST {{odataUrl}}
+Content-Type: application/json
+
+{
+  "Title": "Learn OData",
+  "Description": "Master OData querying capabilities",
+  "IsCompleted": false
+}
+
+### Update a todo (PUT - full update)
+PUT {{odataUrl}}(1)
+Content-Type: application/json
+
+{
+  "Id": 1,
+  "Title": "Updated via OData PUT",
+  "Description": "Full object update",
+  "IsCompleted": true,
+  "CreatedDate": "2024-01-01T00:00:00Z",
+  "CompletedDate": "2024-01-15T10:30:00Z"
+}
+
+### Partial update (PATCH)
+PATCH {{odataUrl}}(2)
+Content-Type: application/json
+
+{
+  "IsCompleted": true
+}
+
+### Delete a todo
+DELETE {{odataUrl}}(3)
+
+### Get OData metadata
+GET {{baseUrl}}/odata/$metadata

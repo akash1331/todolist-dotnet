@@ -1,0 +1,439 @@
+{
+  "info": {
+    "name": "SampleWebApp OData Tests",
+    "description": "Complete collection for testing OData endpoints in SampleWebApplication1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Basic Queries",
+      "item": [
+        {
+          "name": "Get All Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"]
+            },
+            "description": "Retrieves all todos from the OData endpoint"
+          }
+        },
+        {
+          "name": "Get All Todos with Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$count=true",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$count",
+                  "value": "true",
+                  "description": "Include total count in response"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Todo by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos(1)",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos(1)"]
+            },
+            "description": "Get a specific todo by ID using OData key syntax"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Filtering",
+      "item": [
+        {
+          "name": "Filter - Completed Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=IsCompleted eq true",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "IsCompleted eq true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter - Incomplete Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=IsCompleted eq false",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "IsCompleted eq false"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter - Title Contains",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=contains(Title, 'application')",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "contains(Title, 'application')"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter - Date Range",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=CreatedDate ge 2024-01-01T00:00:00Z and CreatedDate le 2024-12-31T23:59:59Z",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "CreatedDate ge 2024-01-01T00:00:00Z and CreatedDate le 2024-12-31T23:59:59Z"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Sorting & Selection",
+      "item": [
+        {
+          "name": "Sort - Newest First",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$orderby=CreatedDate desc",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$orderby",
+                  "value": "CreatedDate desc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sort - Oldest First",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$orderby=CreatedDate asc",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$orderby",
+                  "value": "CreatedDate asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Select Specific Fields",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$select=Id,Title,IsCompleted",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$select",
+                  "value": "Id,Title,IsCompleted"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Pagination",
+      "item": [
+        {
+          "name": "Top 5 Todos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$top=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$top",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Skip 5, Take 5",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$skip=5&$top=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$skip",
+                  "value": "5"
+                },
+                {
+                  "key": "$top",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Complex Queries",
+      "item": [
+        {
+          "name": "Filter + Sort + Select",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=IsCompleted eq false&$orderby=CreatedDate desc&$select=Id,Title,CreatedDate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "IsCompleted eq false"
+                },
+                {
+                  "key": "$orderby",
+                  "value": "CreatedDate desc"
+                },
+                {
+                  "key": "$select",
+                  "value": "Id,Title,CreatedDate"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter + Sort + Page + Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos?$filter=IsCompleted eq false&$orderby=CreatedDate desc&$top=10&$count=true",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"],
+              "query": [
+                {
+                  "key": "$filter",
+                  "value": "IsCompleted eq false"
+                },
+                {
+                  "key": "$orderby",
+                  "value": "CreatedDate desc"
+                },
+                {
+                  "key": "$top",
+                  "value": "10"
+                },
+                {
+                  "key": "$count",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. CRUD Operations",
+      "item": [
+        {
+          "name": "Create New Todo (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Title\": \"Test OData in Postman\",\n  \"Description\": \"Learning how to use OData endpoints\",\n  \"IsCompleted\": false\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos"]
+            }
+          }
+        },
+        {
+          "name": "Update Todo (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Id\": 1,\n  \"Title\": \"Updated from Postman\",\n  \"Description\": \"This todo was updated via PUT\",\n  \"IsCompleted\": true,\n  \"CreatedDate\": \"2024-01-01T00:00:00Z\",\n  \"CompletedDate\": \"2024-01-15T10:30:00Z\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos(1)",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos(1)"]
+            },
+            "description": "Full update - requires complete object"
+          }
+        },
+        {
+          "name": "Partial Update (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"IsCompleted\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos(2)",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos(2)"]
+            },
+            "description": "Partial update - only update specific fields"
+          }
+        },
+        {
+          "name": "Delete Todo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/Todos(3)",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "Todos(3)"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Metadata",
+      "item": [
+        {
+          "name": "Get OData Metadata",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5106/odata/$metadata",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5106",
+              "path": ["odata", "$metadata"]
+            },
+            "description": "Returns the OData service metadata document (EDMX)"
+          }
+        }
+      ]
+    }
+  ]
+}

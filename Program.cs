@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OData.ModelBuilder;
 using SampleWebApplication1.Data;
+using SampleWebApplication1.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TodoContext>(options =>
     options.UseInMemoryDatabase("TodoDb"));
 
-builder.Services.AddControllers();
+// Configure OData
+var modelBuilder = new ODataConventionModelBuilder();
+modelBuilder.EntitySet<Todo>("Todos");
+
+builder.Services.AddControllers()
+    .AddOData(options => options
+        .Select()
+        .Filter()
+        .OrderBy()
+        .Expand()
+        .Count()
+        .SetMaxTop(100)
+        .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
