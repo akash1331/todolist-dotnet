@@ -8,7 +8,7 @@ All Postman documentation and collection files have been updated to use `http://
 
 ## 📦 Updated Files
 
-✅ **SampleWebApp_OData_Postman_Collection.json**  
+✅ **todolist-dotnet_OData_Postman_Collection.json**
 ✅ **POSTMAN_GUIDE.md**  
 ✅ **QUICK_START_POSTMAN.md**  
 ✅ **POSTMAN_UPDATES.md**
@@ -44,7 +44,7 @@ GET    http://localhost:5106/odata/$metadata
 
 ### Step 1: Import Collection
 - Open Postman
-- Import `SampleWebApp_OData_Postman_Collection.json`
+- Import `todolist-dotnet_OData_Postman_Collection.json`
 
 ### Step 2: Run Your App
 - Press F5 in Visual Studio

@@ -8,7 +8,7 @@ The Postman collection and documentation have been updated to use **full URLs** 
 
 ## 📦 Updated Files
 
-### 1. **SampleWebApp_OData_Postman_Collection.json**
+### 1. **todolist-dotnet_OData_Postman_Collection.json**
 - ✅ All requests now use full URLs: `http://localhost:5106/odata/Todos`
 - ✅ Removed collection variables (`{{baseUrl}}`, `{{odataUrl}}`)
 - ✅ All 20+ requests are ready to use immediately after import
@@ -21,6 +21,11 @@ The Postman collection and documentation have been updated to use **full URLs** 
 ### 3. **QUICK_START_POSTMAN.md**
 - ✅ Updated quick start guide
 - ✅ Simplified instructions (no variable setup needed)
+
+### 4. **Chatbot Postman Docs (NEW)**
+- ✅ Added chatbot endpoint testing instructions
+- ✅ Added sample POST request/response for `/api/chatbot/message`
+- ✅ Added note that Foundry API key is configured server-side
 
 ---
 
@@ -67,6 +72,11 @@ DELETE http://localhost:5106/odata/Todos(3)
 GET    http://localhost:5106/odata/$metadata
 ```
 
+### Chatbot
+```
+POST   http://localhost:5000/api/chatbot/message
+```
+
 ---
 
 ## 📝 How to Use
@@ -74,18 +84,34 @@ GET    http://localhost:5106/odata/$metadata
 ### Step 1: Import Collection
 1. Open Postman
 2. Click **Import**
-3. Select `SampleWebApp_OData_Postman_Collection.json`
+3. Select `todolist-dotnet_OData_Postman_Collection.json`
 4. Click **Import**
 
-### Step 2: Start Your App
+### Step 2: Start Your Apps
 ```
 Press F5 in Visual Studio
+```
+
+For chatbot endpoint testing, also run:
+```bash
+dotnet run --project services/chatbot-service/ChatbotService.csproj
 ```
 
 ### Step 3: Test!
 - No setup needed
 - All URLs are ready to use
 - Just click **Send** on any request
+
+For chatbot testing, use this JSON body with `POST /api/chatbot/message`:
+
+> Ensure `services/chatbot-service` is running (separate process).
+```json
+{
+  "message": "Hello chatbot",
+  "sessionId": "postman-test",
+  "systemPrompt": "You are a helpful assistant."
+}
+```
 
 ---
 
@@ -94,7 +120,7 @@ Press F5 in Visual Studio
 If your app runs on a different port (not 5106), you have two options:
 
 ### Option 1: Find & Replace Before Import
-1. Open `SampleWebApp_OData_Postman_Collection.json` in a text editor
+1. Open `todolist-dotnet_OData_Postman_Collection.json` in a text editor
 2. Find and replace all: `5106` → `YOUR_PORT`
 3. Save the file
 4. Import into Postman
@@ -125,7 +151,7 @@ If your app runs on a different port (not 5106), you have two options:
 - **QUICK_START_POSTMAN.md** - Fast 3-step setup (UPDATED)
 - **POSTMAN_GUIDE.md** - Complete testing guide (UPDATED)
 - **ODATA_USAGE.md** - OData syntax reference
-- **SampleWebApp_OData_Postman_Collection.json** - Import this! (UPDATED)
+- **todolist-dotnet_OData_Postman_Collection.json** - Import this! (UPDATED)
 
 ---
 

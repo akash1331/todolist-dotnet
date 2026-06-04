@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "SampleWebApp OData Tests",
-    "description": "Complete collection for testing OData endpoints in SampleWebApplication1",
+    "name": "todolist-dotnet OData Tests",
+    "description": "Complete collection for testing OData endpoints in todolist-dotnet",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
 using SampleWebApplication1.Data;
 using SampleWebApplication1.Models;
+using SampleWebApplication1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,10 @@ builder.Services.AddControllers()
         .Count()
         .SetMaxTop(100)
         .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+
+builder.Services.Configure<AzureAIFoundryOptions>(
+    builder.Configuration.GetSection(AzureAIFoundryOptions.SectionName));
+builder.Services.AddHttpClient<IChatbotService, AzureFoundryChatService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

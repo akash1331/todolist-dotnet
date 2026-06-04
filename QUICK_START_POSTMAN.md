@@ -6,7 +6,7 @@
 1. Open **Postman**
 2. Click **Import** button (top left)
 3. Click **Upload Files**
-4. Select `SampleWebApp_OData_Postman_Collection.json`
+4. Select `todolist-dotnet_OData_Postman_Collection.json`
 5. Click **Import**
 
 ✅ Done! All 20+ test requests are ready to use!
@@ -19,21 +19,27 @@ If you prefer to create requests manually, follow the **POSTMAN_GUIDE.md** file.
 
 ---
 
-## 🏃 Start Testing (3 Steps)
+## 🏃 Start Testing (4 Steps)
 
-### Step 1: Run Your Application
+### Step 1: Run Your Main Application
 ```
 Press F5 in Visual Studio
 ```
-Your app runs at: **http://localhost:5106**
+Main app runs at: **http://localhost:5106**
 
-### Step 2: Configure Postman for HTTPS (One-time setup)
+### Step 2: Run Chatbot Microservice (for chatbot tests)
+```bash
+dotnet run --project services/chatbot-service/ChatbotService.csproj
+```
+Chatbot microservice runs at: **http://localhost:5000**
+
+### Step 3: Configure Postman for HTTPS (One-time setup)
 **If you get SSL errors:**
 1. Postman → **Settings** (⚙️ icon)
 2. **General** tab
 3. Turn **OFF**: "SSL certificate verification"
 
-### Step 3: Test Your First Request
+### Step 4: Test Your First Request
 1. Open the imported collection
 2. Expand **"1. Basic Queries"**
 3. Click **"Get All Todos"**
@@ -51,6 +57,30 @@ Your app runs at: **http://localhost:5106**
 | **Metadata** | `http://localhost:5106/odata/$metadata` |
 
 **Note:** All URLs are hardcoded - no variables needed!
+
+---
+
+## 🤖 Chatbot Endpoint (New)
+
+| Endpoint | URL |
+|----------|-----|
+| **Chatbot Message** | `http://localhost:5000/api/chatbot/message` |
+
+**Method:** `POST`  
+**Header:** `Content-Type: application/json`
+
+**Body Example:**
+```json
+{
+  "message": "Give me 3 productivity tips.",
+  "sessionId": "quick-start-user",
+  "systemPrompt": "You are a helpful assistant."
+}
+```
+
+**Tip:** The Foundry API key is server-side configuration. You only call your local chatbot microservice endpoint from Postman.
+
+**Important:** Run `services/chatbot-service` before testing chatbot requests.
 
 ---
 
@@ -83,6 +113,11 @@ Your app runs at: **http://localhost:5106**
 ### 6. Complex Queries 🚀
 - **Filter + Sort + Select** - Combine multiple operations
 - **Filter + Sort + Page + Count** - All features together
+
+### 7. Chatbot Test 🤖
+- **POST /api/chatbot/message** - Send a chatbot prompt
+- Try with and without `systemPrompt`
+- Try an empty `message` to verify validation behavior
 
 ---
 

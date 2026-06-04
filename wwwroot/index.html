@@ -280,6 +280,52 @@
             border-left: 4px solid #c33;
         }
 
+        .chatbot-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .chat-window {
+            max-height: 320px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            padding: 10px 12px;
+            border-radius: 10px;
+            line-height: 1.4;
+            max-width: 90%;
+            word-break: break-word;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+            background: #667eea;
+            color: white;
+        }
+
+        .chat-message.bot {
+            align-self: flex-start;
+            background: #eef1ff;
+            color: #1f2937;
+            border: 1px solid #d9e0ff;
+        }
+
+        .chat-hint {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
         @media (max-width: 600px) {
             .header h1 {
                 font-size: 2em;
@@ -349,12 +395,39 @@
                 <div class="loading">Loading todos...</div>
             </div>
         </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 10px; color: #333;">🤖 Chatbot</h2>
+            <p class="chat-hint">Send a message to the Azure AI Foundry-backed chatbot microservice.</p>
+            <p class="chat-hint">Service URL: <code>http://localhost:5000/api/chatbot/message</code></p>
+
+            <form class="chatbot-form" id="chatbotForm">
+                <div class="input-group">
+                    <label for="chatSystemPrompt">System Prompt (optional)</label>
+                    <textarea id="chatSystemPrompt" placeholder="You are a helpful assistant."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="chatMessage">Message *</label>
+                    <textarea id="chatMessage" placeholder="Ask something..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+
+            <div id="chatError" class="error-message" style="display: none;"></div>
+
+            <div id="chatWindow" class="chat-window">
+                <div class="chat-message bot">Hi! I am ready. Send a message to begin.</div>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_BASE = '/api/todo';
+        const CHAT_SERVICE_BASE_URL = 'http://localhost:5000';
+        const CHAT_API_BASE = `${CHAT_SERVICE_BASE_URL}/api/chatbot/message`;
         let currentFilter = 'all';
         let todos = [];
+        const chatSessionId = `web-${Date.now()}`;
 
         // Load todos on page load
         document.addEventListener('DOMContentLoaded', () => {
@@ -365,6 +438,7 @@
         function setupEventListeners() {
             // Form submission
             document.getElementById('addTodoForm').addEventListener('submit', handleAddTodo);
+            document.getElementById('chatbotForm').addEventListener('submit', handleSendMessage);
 
             // Filter buttons
             document.querySelectorAll('[data-filter]').forEach(btn => {
@@ -471,6 +545,66 @@
                 showError('Failed to delete todo. Please try again.');
                 console.error('Error deleting todo:', error);
             }
+        }
+
+        async function handleSendMessage(e) {
+            e.preventDefault();
+
+            const messageInput = document.getElementById('chatMessage');
+            const systemPromptInput = document.getElementById('chatSystemPrompt');
+            const message = messageInput.value.trim();
+            const systemPrompt = systemPromptInput.value.trim();
+
+            if (!message) return;
+
+            appendChatMessage('user', message);
+            messageInput.value = '';
+            hideChatError();
+
+            try {
+                const response = await fetch(CHAT_API_BASE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message,
+                        sessionId: chatSessionId,
+                        systemPrompt: systemPrompt || null
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.json().catch(() => null);
+                    const errorMessage = errorBody?.message || 'Failed to get chatbot response.';
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                appendChatMessage('bot', data.reply || 'No response received.');
+            } catch (error) {
+                showChatError(error.message || 'Failed to get chatbot response. Ensure chatbot microservice is running on http://localhost:5000.');
+                appendChatMessage('bot', 'Sorry, I could not process that request.');
+                console.error('Error calling chatbot microservice:', error);
+            }
+        }
+
+        function appendChatMessage(role, text) {
+            const chatWindow = document.getElementById('chatWindow');
+            const message = document.createElement('div');
+            message.className = `chat-message ${role}`;
+            message.innerHTML = escapeHtml(text);
+            chatWindow.appendChild(message);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function showChatError(message) {
+            const errorDiv = document.getElementById('chatError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideChatError() {
+            const errorDiv = document.getElementById('chatError');
+            errorDiv.style.display = 'none';
         }
 
         function renderTodos() {

@@ -1,6 +1,6 @@
 # OData Setup Complete
 
-OData has been successfully added to your SampleWebApplication1 project!
+OData has been successfully added to your todolist-dotnet project!
 
 ## What Was Added
 

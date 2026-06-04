@@ -10,10 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="services\chatbot-service\ChatbotService.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="services\chatbot-service\**\*.cs" />
+    <Content Remove="services\chatbot-service\**\*" />
+    <EmbeddedResource Remove="services\chatbot-service\**\*" />
+    <None Remove="services\chatbot-service\**\*" />
   </ItemGroup>
 
 </Project>

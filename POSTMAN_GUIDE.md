@@ -2,10 +2,13 @@
 
 ## 🚀 Getting Started
 
-### Step 1: Start Your Application
-1. Press **F5** in Visual Studio to run your application
-2. Your app will run at: `http://localhost:5106`
-3. Keep the application running while testing
+### Step 1: Start Your Applications
+1. Press **F5** in Visual Studio to run your main application
+2. Main app runs at: `http://localhost:5106`
+3. Start chatbot microservice in a separate process:
+   - `dotnet run --project services/chatbot-service/ChatbotService.csproj`
+4. Chatbot microservice runs at: `http://localhost:5000`
+5. Keep the required application(s) running while testing
 
 ### Step 2: Open Postman
 Download Postman from https://www.postman.com/downloads/ if you don't have it.
@@ -17,9 +20,64 @@ Download Postman from https://www.postman.com/downloads/ if you don't have it.
 ### Create a New Collection
 1. Click **Collections** in the left sidebar
 2. Click **+** (New Collection)
-3. Name it: `SampleWebApp OData Tests`
+3. Name it: `todolist-dotnet OData Tests`
 
 **Note:** All URLs in this guide use the full URL `http://localhost:5106/odata/Todos` directly - no variables needed!
+
+---
+
+## 🤖 Chatbot Microservice Testing (New)
+
+You can test the new chatbot endpoint from Postman just like any other API.
+
+### Chat Endpoint
+
+**Name:** Chatbot - Send Message
+
+**Method:** POST
+
+**URL:** `http://localhost:5000/api/chatbot/message`
+
+**Headers:**
+```
+Content-Type: application/json
+```
+
+**Body (raw JSON):**
+```json
+{
+  "message": "Hello! Can you help me plan my tasks for today?",
+  "sessionId": "user-123",
+  "systemPrompt": "You are a concise and helpful assistant."
+}
+```
+
+**Expected Response:**
+```json
+{
+  "reply": "...assistant response...",
+  "sessionId": "user-123",
+  "model": "...",
+  "finishReason": "stop"
+}
+```
+
+### Common Chatbot Test Cases
+
+1. **Basic prompt**
+   - Send only `message`
+2. **With session id**
+   - Include `sessionId` for client-side conversation tracking
+3. **With system prompt**
+   - Include `systemPrompt` to customize assistant behavior
+4. **Validation check**
+   - Send empty `message` and verify you get `400 Bad Request`
+
+### Important Note
+
+The Azure AI Foundry API key is configured on the server (`appsettings` / user-secrets / env vars), so Postman calls your local chatbot microservice API only. You do **not** need to send the Foundry API key from Postman to `/api/chatbot/message`.
+
+Make sure `services/chatbot-service` is running before sending this request.
 
 ---
 

@@ -41,20 +41,20 @@ A modern, full-stack Todo List web application built with ASP.NET Core 10 and va
 
 ```bash
 git clone <your-repo-url>
-cd SampleWebApplication1
+cd todolist-dotnet
 ```
 
 ### Run the Application
 
 #### Option 1: Visual Studio
-1. Open `SampleWebApplication1.sln`
+1. Open `todolist-dotnet.slnx`
 2. Press `F5` to run
 3. Navigate to `http://localhost:5106`
 
 #### Option 2: Command Line
 ```bash
-dotnet restore
-dotnet run
+dotnet restore todolist-dotnet.slnx
+dotnet run --project todolist-dotnet.csproj
 ```
 Then open `http://localhost:5106` in your browser.
 
@@ -101,20 +101,32 @@ PUT /api/todo/1
 
 ## 📁 Project Structure
 
-```
-SampleWebApplication1/
+```text
+todolist-dotnet/
 ├── Controllers/
-│   └── TodoController.cs      # API endpoints
+│   └── TodoController.cs                 # Todo API endpoints
 ├── Data/
-│   └── TodoContext.cs          # EF Core DbContext
+│   └── TodoContext.cs                    # EF Core DbContext
 ├── Models/
-│   └── Todo.cs                 # Todo entity model
+│   └── Todo.cs                           # Todo entity model
+├── services/
+│   └── chatbot-service/                  # Separate chatbot microservice
+│       ├── Controllers/
+│       │   └── ChatbotController.cs
+│       ├── Models/
+│       │   └── ChatModels.cs
+│       ├── Services/
+│       │   ├── IChatbotService.cs
+│       │   └── AzureFoundryChatService.cs
+│       ├── Program.cs
+│       ├── appsettings.json
+│       └── ChatbotService.csproj
 ├── wwwroot/
-│   └── index.html              # Frontend UI
-├── Program.cs                  # App configuration
-├── appsettings.json            # App settings
-├── Dockerfile                  # Docker configuration
-└── README.md                   # This file
+│   └── index.html                        # Frontend UI (wired to chatbot microservice)
+├── Program.cs                            # Main app configuration
+├── appsettings.json                      # Main app settings
+├── Dockerfile                            # Docker configuration
+└── README.md                             # This file
 ```
 
 ## 💡 Usage
@@ -165,6 +177,80 @@ The project includes Docker support with a multi-stage Dockerfile optimized for 
 ## 🤝 Contributing
 
 Feel free to submit issues and enhancement requests!
+
+## 🤖 Chatbot Microservice (Separate Service)
+
+A separate chatbot microservice has been added under:
+
+```text
+services/chatbot-service
+```
+
+This service is independently deployable and exposes chatbot endpoints backed by Azure AI Foundry.
+
+### Chatbot Microservice Endpoint
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/chatbot/message` | Send a message to the chatbot |
+
+### Run Chatbot Microservice
+
+From workspace root:
+
+```bash
+dotnet run --project services/chatbot-service/ChatbotService.csproj
+```
+
+Then call (example):
+
+```text
+http://localhost:5000/api/chatbot/message
+```
+
+> Note: port may vary by environment. Use launch output for the exact URL.
+
+### Frontend Wiring (Main App -> Chatbot Microservice)
+
+The main frontend (`wwwroot/index.html`) is wired to call the separate chatbot service at:
+
+```text
+http://localhost:5000/api/chatbot/message
+```
+
+To use chatbot from UI, run **both** apps:
+
+```bash
+dotnet run --project todolist-dotnet.csproj
+```
+
+```bash
+dotnet run --project services/chatbot-service/ChatbotService.csproj
+```
+
+If your chatbot service runs on a different port, update `CHAT_SERVICE_BASE_URL` in `wwwroot/index.html`.
+
+### Configure Azure AI Foundry
+
+Set these values for `services/chatbot-service`:
+
+- `AzureAIFoundry:ChatCompletionsUrl`
+- `AzureAIFoundry:ApiKey`
+- `AzureAIFoundry:Temperature`
+- `AzureAIFoundry:MaxTokens`
+- `Cors:AllowedOrigins` (ensure main app origin is included)
+
+Prefer user-secrets or environment variables for API keys.
+
+### Sample Request
+
+```json
+{
+  "message": "Hello!",
+  "sessionId": "sample-session",
+  "systemPrompt": "You are a helpful assistant."
+}
+```
 
 ## 📄 License
 
